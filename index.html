@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Website Sekolah</title>
+  <meta name="theme-color" content="#146c43">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Logo & nama sekolah -->
+  <header class="site-top">
+    <div class="container">
+      <img id="top-logo" class="brand-logo" alt="Logo sekolah">
+      <h1 class="brand-name" id="top-name">…</h1>
+    </div>
+  </header>
+
+  <!-- Menu -->
+  <nav class="nav" aria-label="Menu utama">
+    <div class="container">
+      <button class="nav-toggle" id="nav-toggle" aria-label="Buka menu">☰</button>
+      <ul class="menu" id="menu">
+        <li><a href="#/" data-r="home">Beranda</a></li>
+        <li class="has-dd">
+          <a href="#/profil" data-r="profil,visi-misi,guru">Profil <span class="caret">▼</span></a>
+          <ul class="dd">
+            <li><a href="#/profil" data-r="profil">Profil Sekolah</a></li>
+            <li><a href="#/visi-misi" data-r="visi-misi">Visi dan Misi</a></li>
+            <li><a href="#/guru" data-r="guru">Data Guru dan Pegawai</a></li>
+          </ul>
+        </li>
+        <li class="has-dd">
+          <a href="#/kesiswaan" data-r="kesiswaan,ekstrakurikuler,pembiasaan,prestasi">Kesiswaan <span class="caret">▼</span></a>
+          <ul class="dd">
+            <li><a href="#/kesiswaan" data-r="kesiswaan">Data Kesiswaan</a></li>
+            <li><a href="#/ekstrakurikuler" data-r="ekstrakurikuler">Ekstrakurikuler</a></li>
+            <li><a href="#/pembiasaan" data-r="pembiasaan">Kegiatan Pembiasaan Sekolah</a></li>
+            <li><a href="#/prestasi" data-r="prestasi">Prestasi Siswa</a></li>
+          </ul>
+        </li>
+        <li><a href="#/berita" data-r="berita">Berita Sekolah</a></li>
+        <li><a href="#/pendaftaran" data-r="pendaftaran">Pendaftaran</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="app" aria-live="polite"></main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container foot-grid">
+      <div>
+        <h4>Tentang Kami</h4>
+        <p id="f-about"></p>
+      </div>
+      <div>
+        <h4>Contact Us</h4>
+        <ul class="contact" id="f-contact"></ul>
+      </div>
+      <div>
+        <h4>Media Sosial</h4>
+        <div class="socials" id="f-social"></div>
+      </div>
+    </div>
+    <div class="copy" id="f-copy"></div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/public.js"></script>
+</body>
+</html>
