@@ -146,3 +146,40 @@ function loading(show, text = 'Memproses…') {
     document.body.appendChild(_loadEl);
   } else if (_loadEl) { _loadEl.remove(); _loadEl = null; }
 }
+
+/* ---- Pagination: Sebelumnya / nomor halaman / Selanjutnya ---- */
+function clampPage(page, total, size) {
+  return Math.min(Math.max(1, page | 0 || 1), Math.max(1, Math.ceil(total / size)));
+}
+function pagerHtml(total, page, size) {
+  const pages = Math.max(1, Math.ceil(total / size));
+  if (total <= size) return total ? `<div class="pager"><span class="info">Menampilkan ${total} data</span></div>` : '';
+  const a = (page - 1) * size + 1, b = Math.min(total, page * size);
+  const nums = [];
+  for (let i = 1; i <= pages; i++) {
+    if (i === 1 || i === pages || Math.abs(i - page) <= 1) nums.push(i);
+    else if (nums[nums.length - 1] !== '…') nums.push('…');
+  }
+  const btn = (p, label, dis, on) => `<button type="button" data-p="${p}" ${dis ? 'disabled' : ''} ${on ? 'class="on" aria-current="page"' : ''}>${label}</button>`;
+  return `<div class="pager"><span class="info">Menampilkan ${a}–${b} dari ${total} data</span><div class="pg">
+    ${btn(page - 1, '‹ Sebelumnya', page <= 1)}
+    ${nums.map(n => n === '…' ? '<span class="dots2">…</span>' : btn(n, n, false, n === page)).join('')}
+    ${btn(page + 1, 'Selanjutnya ›', page >= pages)}
+  </div></div>`;
+}
+// Pasang klik pager pada sebuah wadah; onGo(halamanBaru) dipanggil saat tombol ditekan
+function bindPager(box, onGo) {
+  box.onclick = e => {
+    const b = e.target.closest('button[data-p]');
+    if (b && !b.disabled) onGo(+b.dataset.p);
+  };
+}
+
+/* ---- Link Google Drive -> link unduh langsung (jika berbentuk file) ---- */
+function dlUrl(link) {
+  link = String(link || '').trim();
+  if (!/^https:\/\/(drive|docs)\.google\.com\//i.test(link)) return '';
+  const m = link.match(/\/file\/d\/([\w-]+)/) || link.match(/[?&]id=([\w-]+)/);
+  if (m && /drive\.google\.com/i.test(link) && !/\/folders\//.test(link)) return `https://drive.google.com/uc?export=download&id=${m[1]}`;
+  return link;
+}
