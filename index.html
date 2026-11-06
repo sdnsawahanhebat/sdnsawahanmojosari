@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Website Sekolah</title>
   <meta name="theme-color" content="#146c43">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src https://script.google.com https://script.googleusercontent.com; frame-src https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
@@ -43,6 +45,7 @@
             <li><a href="#/prestasi" data-r="prestasi">Prestasi Siswa</a></li>
           </ul>
         </li>
+        <li><a href="#/kurikulum" data-r="kurikulum">Kurikulum</a></li>
         <li><a href="#/berita" data-r="berita">Berita Sekolah</a></li>
         <li><a href="#/pendaftaran" data-r="pendaftaran">Pendaftaran</a></li>
       </ul>
@@ -56,6 +59,7 @@
     <div class="container foot-grid">
       <div>
         <h4>Tentang Kami</h4>
+        <img id="f-logo" class="f-logo" alt="Logo sekolah" hidden>
         <p id="f-about"></p>
       </div>
       <div>
