@@ -24,6 +24,8 @@ function renderChrome() {
   document.title = nama;
   $('#top-name').textContent = nama;
   $('#top-logo').src = imgUrl(s.logo_url) || logoPlaceholder();
+  const fl = $('#f-logo');
+  if (imgUrl(s.logo_url)) { fl.src = imgUrl(s.logo_url); fl.hidden = false; }
 
   $('#f-about').textContent = `${nama} berkomitmen mencetak generasi yang cerdas, berkarakter, dan berprestasi.`;
 
@@ -186,6 +188,33 @@ function pageGrid(kat, title, sub) {
   </div></section>`;
 }
 
+/* ---------- Kurikulum: daftar modul (link Google Drive) ---------- */
+let KPAGE = 1;
+function pageKurikulum() {
+  const list = D.modul || [];
+  const SIZE = 10;
+  app.innerHTML = `${banner('Kurikulum', 'Daftar modul yang dapat diunduh')}
+  <section class="section"><div class="container fade">
+    ${list.length ? `<div class="tbl-box"><div class="tbl-scroll"><table class="modul">
+      <thead><tr><th class="no">No</th><th>Judul Modul</th><th class="dl">Link Download</th></tr></thead>
+      <tbody id="kur-body"></tbody></table></div></div><div id="kur-pager"></div>`
+      : emptyBox('Belum ada modul yang tersedia.')}
+  </div></section>`;
+  if (!list.length) return;
+  const draw = () => {
+    KPAGE = clampPage(KPAGE, list.length, SIZE);
+    const start = (KPAGE - 1) * SIZE;
+    $('#kur-body').innerHTML = list.slice(start, start + SIZE).map((m, i) => {
+      const u = dlUrl(m.link);
+      return `<tr><td class="no">${start + i + 1}</td><td>${esc(m.judul)}</td><td class="dl">${u
+        ? `<a class="btn btn-primary btn-sm" href="${esc(u)}" target="_blank" rel="noopener noreferrer">⬇ Download</a>` : '<span class="meta">-</span>'}</td></tr>`;
+    }).join('');
+    $('#kur-pager').innerHTML = pagerHtml(list.length, KPAGE, SIZE);
+  };
+  bindPager($('#kur-pager'), p => { KPAGE = p; draw(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  draw();
+}
+
 function pageBerita() {
   const l = byKat('Berita');
   app.innerHTML = `${banner('Berita Sekolah', 'Kabar dan kegiatan terbaru')}
@@ -220,6 +249,7 @@ function pagePendaftaran() {
         <div class="reg-brand"><img src="${esc(imgUrl(s.logo_url) || logoPlaceholder())}" alt="Logo"><b>${esc(s.nama_sekolah)}</b></div>
       </div>
       <form id="reg" class="form" novalidate autocomplete="off">
+        <div class="hp" aria-hidden="true"><label>Jangan isi kolom ini<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
         <div class="fg full"><label for="nama">Nama Lengkap Siswa <span class="req">*</span></label><input class="inp" id="nama" name="nama" maxlength="150" required></div>
         <div class="fg"><label for="tempat_lahir">Tempat Lahir <span class="req">*</span></label><input class="inp" id="tempat_lahir" name="tempat_lahir" maxlength="100" required></div>
         <div class="fg"><label for="tanggal_lahir">Tanggal Lahir <span class="req">*</span></label><input class="inp" type="date" id="tanggal_lahir" name="tanggal_lahir" required></div>
@@ -247,6 +277,7 @@ function pagePendaftaran() {
 
   const form = $('#reg');
   const PH = placeholder('Foto');
+  const tBuka = Date.now();   // dipakai server untuk menolak kiriman yang terlalu cepat (bot)
 
   // Hanya angka untuk NIK dan KK
   ['no_kk', 'nik'].forEach(n => form[n].addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 16); }));
@@ -282,6 +313,8 @@ function pagePendaftaran() {
       const data = {};
       ['nama', 'tempat_lahir', 'tanggal_lahir', 'jk', 'nama_ayah', 'nama_ibu', 'nama_wali', 'alamat', 'no_kk', 'nik']
         .forEach(k => data[k] = String(fd.get(k) || '').trim());
+      data.website = String(fd.get('website') || '');
+      data.durasi = Date.now() - tBuka;
       data.foto_kk = await fileToDataUrl(form.foto_kk.files[0], 1100, 0.75);
       data.foto_akta = await fileToDataUrl(form.foto_akta.files[0], 1100, 0.75);
       data.foto_siswa = await fileToDataUrl(form.foto_siswa.files[0], 800, 0.8);
@@ -325,7 +358,7 @@ const ROUTES = {
   ekstrakurikuler: () => pageGrid('Ekstrakurikuler', 'Ekstrakurikuler', 'Kegiatan pengembangan bakat dan minat siswa'),
   pembiasaan: () => pageGrid('Pembiasaan', 'Kegiatan Pembiasaan Sekolah', 'Membangun karakter melalui kebiasaan baik'),
   prestasi: () => pageGrid('Prestasi Siswa', 'Prestasi Siswa', 'Kebanggaan kami'),
-  berita: pageBerita, pendaftaran: pagePendaftaran
+  kurikulum: pageKurikulum, berita: pageBerita, pendaftaran: pagePendaftaran
 };
 
 function route() {
@@ -363,7 +396,8 @@ $$('.has-dd > a').forEach(a => a.addEventListener('click', e => {
   } catch (e) {
     app.innerHTML = `<section class="section"><div class="container"><div class="empty">
       <h3>Data belum dapat dimuat</h3><p>${esc(e.message)}</p>
-      <button class="btn btn-primary" onclick="location.reload()">Coba Lagi</button></div></div></section>`;
+      <button class="btn btn-primary" id="retry">Coba Lagi</button></div></div></section>`;
+    $('#retry').onclick = () => location.reload();
   }
 })();
 window.addEventListener('hashchange', route);
