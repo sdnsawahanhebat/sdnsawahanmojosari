@@ -24,8 +24,10 @@ function renderChrome() {
   document.title = nama;
   $('#top-name').textContent = nama;
   $('#top-logo').src = imgUrl(s.logo_url) || logoPlaceholder();
-  const fl = $('#f-logo');
-  if (imgUrl(s.logo_url)) { fl.src = imgUrl(s.logo_url); fl.hidden = false; }
+  const setLogo = (el, u) => { const v = imgUrl(u); if (v) { el.src = v; el.hidden = false; } else el.hidden = true; };
+  setLogo($('#logo-kiri'), s.logo_kiri_url);
+  setLogo($('#logo-kanan'), s.logo_kanan_url);
+  setLogo($('#f-logo'), s.logo_kanan_url);   // footer memakai logo yang sama dengan logo samping kanan
 
   $('#f-about').textContent = `${nama} berkomitmen mencetak generasi yang cerdas, berkarakter, dan berprestasi.`;
 
