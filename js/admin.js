@@ -520,7 +520,9 @@ async function onSiswaAction(e) {
   if (a === 'print') {
     loading(true, 'Membuat PDF…');
     try {
-      const r = await call('cetakSiswa', { id });
+      // Logo utama dikirim juga dari browser sebagai cadangan (bila server tak bisa mengambilnya dari link luar)
+      const logo = await urlToDataUrl(imgUrl(CFG.logo_url));
+      const r = await call('cetakSiswa', { id, logo });
       const bin = atob(r.base64), arr = new Uint8Array(bin.length);
       for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
       const url = URL.createObjectURL(new Blob([arr], { type: 'application/pdf' }));
