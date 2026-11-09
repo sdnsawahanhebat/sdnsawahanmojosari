@@ -108,17 +108,24 @@ h1, h2, h3, h4 { font-family: var(--serif); line-height: 1.25; margin: 0 0 .5em;
 }
 .site-top::before { width: 340px; height: 340px; left: -90px; top: -160px; }
 .site-top::after { width: 260px; height: 260px; right: -60px; bottom: -150px; }
-/* Logo persegi panjang: mengikuti ukuran aslinya, tidak dipotong dan tidak dibulatkan */
+/* Tiga logo di header: logo utama (lingkaran) di tengah, logo tambahan persegi panjang di kiri & kanan.
+   Ketiganya setinggi 84px; logo samping lebarnya mengikuti rasio aslinya (tidak dipotong / gepeng). */
+.brand-row { display: flex; align-items: center; justify-content: center; gap: 18px; margin: 0 auto 10px; position: relative; z-index: 1; }
 .brand-logo {
-  display: block; width: auto; height: auto; max-height: 96px; max-width: min(340px, 82%); object-fit: contain;
-  margin: 0 auto 10px; background: #fff; border-radius: 10px; padding: 6px 12px;
-  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, .5); position: relative; z-index: 1;
+  display: block; flex: none; width: 84px; height: 84px; object-fit: contain; background: #fff; border-radius: 50%;
+  padding: 6px; box-shadow: 0 8px 24px -8px rgba(0, 0, 0, .5);
 }
-.f-logo {
-  display: block; width: auto; height: auto; max-height: 84px; max-width: 100%; object-fit: contain;
-  background: #fff; border-radius: 10px; padding: 6px 12px; margin-bottom: 14px;
+.brand-side, .f-logo {
+  display: block; flex: none; box-sizing: border-box; height: 84px; width: auto; max-width: min(300px, 32vw); object-fit: contain;
+  background: #fff; border-radius: 10px; padding: 6px 10px; box-shadow: 0 8px 24px -8px rgba(0, 0, 0, .5);
 }
-.f-logo[hidden] { display: none; }
+.f-logo { max-width: 100%; margin-bottom: 14px; box-shadow: none; }
+.brand-side[hidden], .f-logo[hidden] { display: none; }
+@media (max-width: 620px) {
+  .brand-row { gap: 10px; }
+  .brand-logo { width: 60px; height: 60px; padding: 4px; }
+  .brand-side { height: 60px; padding: 4px 6px; }
+}
 .brand-name { font: 700 clamp(1.4rem, 3.2vw, 2.1rem) var(--serif); color: #fff; margin: 0; letter-spacing: .5px; position: relative; z-index: 1; }
 .brand-sub { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #cdeedc; position: relative; z-index: 1; }
 
@@ -242,7 +249,7 @@ h1, h2, h3, h4 { font-family: var(--serif); line-height: 1.25; margin: 0 0 .5em;
 .reg-head h1 { color: #fff; font-size: clamp(1.3rem, 2.6vw, 1.9rem); margin: 0; }
 .reg-head p { margin: 4px 0 0; color: #cdeedc; }
 .reg-brand { text-align: center; min-width: 130px; }
-.reg-brand img { width: auto; height: auto; max-width: 150px; max-height: 80px; object-fit: contain; background: #fff; padding: 5px 8px; border-radius: 10px; margin: 0 auto 6px; }
+.reg-brand img { width: 74px; height: 74px; object-fit: contain; background: #fff; padding: 5px; border-radius: 50%; margin: 0 auto 6px; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
 /* ---------- Tabel modul kurikulum ---------- */
