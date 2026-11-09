@@ -39,7 +39,11 @@ function img(u, alt = '', ph = 'Foto', cls = '') {
 // Jika gambar gagal dimuat, ganti dengan placeholder
 document.addEventListener('error', e => {
   const t = e.target;
-  if (t && t.tagName === 'IMG' && !t.dataset.fb) { t.dataset.fb = '1'; t.src = placeholder('Foto'); }
+  if (t && t.tagName === 'IMG' && !t.dataset.fb) {
+    t.dataset.fb = '1';
+    if (t.classList.contains('brand-side') || t.classList.contains('f-logo')) t.hidden = true;   // logo tambahan rusak: sembunyikan
+    else t.src = placeholder('Foto');
+  }
 }, true);
 
 /* ---- Kompres gambar di browser sebelum diunggah ---- */
@@ -182,4 +186,27 @@ function dlUrl(link) {
   const m = link.match(/\/file\/d\/([\w-]+)/) || link.match(/[?&]id=([\w-]+)/);
   if (m && /drive\.google\.com/i.test(link) && !/\/folders\//.test(link)) return `https://drive.google.com/uc?export=download&id=${m[1]}`;
   return link;
+}
+
+/* ---- Ubah gambar (dari link) menjadi data PNG lewat canvas; '' bila gagal / diblokir CORS ---- */
+function urlToDataUrl(u, max = 400) {
+  return new Promise(res => {
+    if (!u) return res('');
+    if (String(u).startsWith('data:')) return res(u);
+    const im = new Image();
+    im.crossOrigin = 'anonymous';
+    const t = setTimeout(() => res(''), 8000);
+    im.onload = () => {
+      clearTimeout(t);
+      try {
+        const r = Math.min(1, max / Math.max(im.naturalWidth, im.naturalHeight));
+        const c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(im.naturalWidth * r)); c.height = Math.max(1, Math.round(im.naturalHeight * r));
+        c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+        res(c.toDataURL('image/png'));
+      } catch { res(''); }
+    };
+    im.onerror = () => { clearTimeout(t); res(''); };
+    im.src = u;
+  });
 }
